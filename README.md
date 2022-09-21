@@ -5,3 +5,6 @@
 3. `docker-compose exec app compose install`
 4. `docker-compose exec app php artisan key:generate`
 5. `docker-compose exec app php artisan migrate`
+
+## Terminate
+`docker-compose down`
