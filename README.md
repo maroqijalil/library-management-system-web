@@ -60,8 +60,8 @@ Usage:
 
 Usage:
 
-`php artisan enligtn`
+`php artisan enlightn`
 
 or
 
-`/usr/bin/php<version> artisan enligtn`
+`/usr/bin/php<version> artisan enlightn`
