@@ -6,7 +6,7 @@
 
 Requirememts:
 
-- PHP Version 7.2.5 and its base Extension
+- PHP Version 7.2.5 and its base extensions
 - Composer 1.6.5 (Recomended), exaclty newest version is okay
 - MySQL
 
@@ -39,3 +39,11 @@ Steps:
 
 ## Terminate
 `docker-compose down`
+
+## Code Smell Tools
+
+### PHPMD
+
+This is required dev dependency of this laravel project. So, its funcionality will be included after `composer install` ran. Usage:
+
+`vendor/bin/phpmd app html ./phpmd-ruleset.xml > phpmd.html`
