@@ -42,8 +42,16 @@ Steps:
 
 ## Code Smell Tools
 
-### PHPMD
+This is required dev dependency of this laravel project. So, its funcionality will be included after `composer install` ran. 
 
-This is required dev dependency of this laravel project. So, its funcionality will be included after `composer install` ran. Usage:
+### PHPMD ([reference](https://winnietech.com/quick-check-of-your-laravel-project-using-php-mess-detector/))
+
+Usage:
 
 `vendor/bin/phpmd app html ./phpmd-ruleset.xml > phpmd.html`
+
+### Larastan ([reference](https://github.com/nunomaduro/larastan/tree/1.x))
+
+Usage:
+
+`./vendor/bin/phpstan analyse`

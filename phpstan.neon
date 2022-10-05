@@ -1,0 +1,17 @@
+parameters:
+    paths:
+        - app
+    level: 7
+    inferPrivatePropertyTypeFromConstructor: true
+    checkMissingIterableValueType: false
+    excludePaths:
+        - ./app/Providers/*
+    ignoreErrors:
+        - '#Access to an undefined property App\\Http\\Requests(.*)::\$.*#'
+        - '#(.*)should return Illuminate\Http\RedirectResponse but returns Illuminate\Http\RedirectResponse|Illuminate\Routing\Redirector#'
+        - '#Access to an undefined property App\\Models(.*)::\$.*#'
+        - '#Call to an undefined method App\\Models(.*)::.*#'
+        - '#Call to an undefined static method App\\Models(.*)::.*#'
+        - '#Call to an undefined method Illuminate\\(.*)::.*#'
+        - '#Access to an undefined property Illuminate\\(.*)::.*#'
+        - '#Call to an undefined static method Illuminate\\(.*)::.*#'
