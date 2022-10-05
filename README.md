@@ -55,3 +55,13 @@ Usage:
 Usage:
 
 `./vendor/bin/phpstan analyse`
+
+### Laravel-Enlightn ([reference](https://www.laravel-enlightn.com/docs/getting-started/installation.html#requirements))
+
+Usage:
+
+`php artisan enligtn`
+
+or
+
+`/usr/bin/php<version> artisan enligtn`
