@@ -60,18 +60,6 @@ class BooksController extends Controller
 		return $bookList;
 	}
 
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -83,56 +71,53 @@ class BooksController extends Controller
 
 		// DB::transaction( function() use($books) {
 		// dd($books);
-		$db_flag = false;
-		$user_id = Auth::id();
-		$book_title = Books::create([
+		$userId = Auth::id();
+		$bookTitle = Books::create([
 			'title'			=> $books['title'],
 			'author'		=> $books['author'],
 			'description' 	=> $books['description'],
 			'category_id'	=> $books['category_id'],
-			'added_by'		=> $user_id
+			'added_by'		=> $userId
 		]);
-		// dd($book_title);
-		$newId = $book_title->book_id;
-		// dd($newId);
-		if (!$book_title) {
-			$db_flag = true;
-		} else {
-			$number_of_issues = $books['number'];
+		// dd($bookTitle);
+		$newId = $bookTitle->book_id;
 
-			for ($i = 0; $i < $number_of_issues; $i++) {
+		$message = 'Invalid update data provided';
+		if (!$bookTitle) {
+			return $message;
+		}
 
-				$issues = Issue::create([
-					'book_id'	=> $newId,
-					'added_by'	=> $user_id
-				]);
+		$numberOfIssues = $books['number'];
 
-				if (!$issues) {
-					$db_flag = true;
-				}
+		$dbFlag = false;
+		for ($i = 0; $i < $numberOfIssues; $i++) {
+			$issues = Issue::create([
+				'book_id'	=> $newId,
+				'added_by'	=> $userId
+			]);
+
+			if (!$issues) {
+				$dbFlag = true;
 			}
 		}
 
-		if ($db_flag)
-			return 'Invalid update data provided';
-
-		// });
+		if ($dbFlag) {
+			return $message;
+		}
 
 		return "Books Added successfully to Database";
 	}
 
 
-	public function BookCategoryStore(Request $request)
+	public function bookCategoryStore(Request $request)
 	{
 		$bookcategory = BookCategories::create($request->all());
 
 		if (!$bookcategory) {
-
 			return 'Book Category fail to save!';
-		} else {
-
-			return "Book Category Added successfully to Database";
 		}
+
+		return "Book Category Added successfully to Database";
 	}
 
 
@@ -198,93 +183,70 @@ class BooksController extends Controller
 			'return_time'	=> 0,
 			'book_issue_id'	=> $id,
 		);
-		$book_issue_log = Logs::where($conditions)
+		$bookIssueLog = Logs::where($conditions)
 			->take(1)
 			->get();
 
-		foreach ($book_issue_log as $log) {
-			$student_id = $log->student_id;
+		foreach ($bookIssueLog as $log) {
+			$studentId = $log->student_id;
 		}
 
-		$student_data = Student::find($student_id);
+		$studentData = Student::find($studentId);
 
-		unset($student_data->email_id);
-		unset($student_data->books_issued);
-		unset($student_data->approved);
-		unset($student_data->rejected);
+		unset($studentData->email_id);
+		unset($studentData->books_issued);
+		unset($studentData->approved);
+		unset($studentData->rejected);
 
-		$student_branch = Branch::find($student_data->branch)
+		$studentBranch = Branch::find($studentData->branch)
 			->branch;
-		$roll_num = $student_data->roll_num . '/' . $student_branch . '/' . substr($student_data->year, 2, 4);
+		$rollNum = $studentData->roll_num . '/' . $studentBranch . '/' . substr($studentData->year, 2, 4);
 
-		unset($student_data->roll_num);
-		unset($student_data->branch);
-		unset($student_data->year);
+		unset($studentData->roll_num);
+		unset($studentData->branch);
+		unset($studentData->year);
 
-		$student_data->roll_num = $roll_num;
+		$studentData->roll_num = $rollNum;
 
-		$student_data->category = StudentCategories::find($student_data->category)
+		$studentData->category = StudentCategories::find($studentData->category)
 			->category;
-		$issue->student = $student_data;
+		$issue->student = $studentData;
 
 
 		return $issue;
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
-	public function renderAddBookCategory(Type $var = null)
+	public function renderAddBookCategory()
 	{
 		return view('panel.addbookcategory');
 	}
 
-
 	public function renderAddBooks()
 	{
-		$db_control = new HomeController();
+		$dbControl = new HomeController();
 
 		return view('panel.addbook')
-			->with('categories_list', $db_control->categories_list);
+			->with('categories_list', $dbControl->categories_list);
 	}
 
 	public function renderAllBooks()
 	{
-		$db_control = new HomeController();
+		$dbControl = new HomeController();
 
 		return view('panel.allbook')
-			->with('categories_list', $db_control->categories_list);
+			->with('categories_list', $dbControl->categories_list);
 	}
 
-	public function BookByCategory($cat_id)
+	public function bookByCategory($catId)
 	{
 		$bookList = Books::select('book_id', 'title', 'author', 'description', 'book_categories.category')
 			->join('book_categories', 'book_categories.id', '=', 'books.category_id')
-			->where('category_id', $cat_id)->orderBy('book_id');
+			->where('category_id', $catId)->orderBy('book_id');
 
 		$bookList = $bookList->get();
 
-		for ($i = 0; $i < count($bookList); $i++) {
+		$bookSize = count($bookList);
+		for ($i = 0; $i < $bookSize; $i++) {
 
 			$id = $bookList[$i]['book_id'];
 			$conditions = array(
@@ -306,9 +268,9 @@ class BooksController extends Controller
 
 	public function searchBook()
 	{
-		$db_control = new HomeController();
+		$dbControl = new HomeController();
 
 		return view('public.book-search')
-			->with('categories_list', $db_control->categories_list);
+			->with('categories_list', $dbControl->categories_list);
 	}
 }

@@ -49,7 +49,7 @@
 			</div>
 		</div>
 	</div>
-	<input type="hidden" name="categories_list" id="categories_list" value="{{ json_encode($categories_list) }}">
+	<input type="hidden" name="categories_list" id="categories_list" value="{{ json_encode($categoriesList) }}">
 </div>
 
 

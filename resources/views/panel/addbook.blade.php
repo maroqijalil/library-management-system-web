@@ -38,7 +38,7 @@
                     <label class="control-label" for="basicinput">Category</label>
                     <div class="controls">
                         <select tabindex="1" id="category" data-form-field="category" data-placeholder="Select category.." class="span8">
-                            @foreach($categories_list as $category)
+                            @foreach($categoriesList as $category)
                                 <option value="{{ $category->id }}">{{ $category->category }}</option>
                             @endforeach
                         </select>

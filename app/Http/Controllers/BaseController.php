@@ -4,7 +4,7 @@ class BaseController extends Controller
 {
   protected  $filterParams = array();
 
-  protected  $sort_params = array();
+  protected  $sortParams = array();
 
   /**
    * Setup the layout used by the controller.

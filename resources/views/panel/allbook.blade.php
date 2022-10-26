@@ -16,7 +16,7 @@
             </p> -->
             <div class="controls">
                 <select class="" id="category_fill">
-                    @foreach($categories_list as $category)
+                    @foreach($categoriesList as $category)
                         <option value="{{ $category->id }}">{{ $category->category }}</option>
                     @endforeach
                 </select>
@@ -41,7 +41,7 @@
             </table>
         </div>
     </div>
-    <input type="hidden" name="" id="categories_list" value="{{ json_encode($categories_list) }}">
+    <input type="hidden" name="" id="categories_list" value="{{ json_encode($categoriesList) }}">
 </div>
 @stop
 
