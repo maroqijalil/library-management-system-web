@@ -11,12 +11,14 @@ use App\Models\StudentCategories;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class LogController extends Controller
 {
-	public function index()
+	public function index(): Response
 	{
-
 		$logs = Logs::select('id', 'book_issue_id', 'student_id', 'issued_at')
 			->where('return_time', '=', 0)
 			->orderBy('issued_at', 'DESC');
@@ -52,7 +54,7 @@ class LogController extends Controller
 		return $logs;
 	}
 
-	public function store(Request $request)
+	public function store(Request $request): string
 	{
 		$data = $request->all()['data'];
 		$bookID = $data['bookID'];
@@ -118,7 +120,7 @@ class LogController extends Controller
 		return 'Book Issued Successfully!';
 	}
 
-	public function edit($id)
+	public function edit(int $id): string
 	{
 		$issueID = $id;
 
@@ -141,7 +143,6 @@ class LogController extends Controller
 		$studentId = $log['student_id'];
 		$issueId = $log['book_issue_id'];
 
-
 		DB::transaction(function () use ($logId, $studentId, $issueId) {
 			// change log status by changing return time
 			$logChange = Logs::find($logId);
@@ -162,12 +163,12 @@ class LogController extends Controller
 		return 'Successfully returned';
 	}
 
-	public function renderLogs()
+	public function renderLogs(): View|Factory
 	{
 		return view('panel.logs');
 	}
 
-	public function renderIssueReturn()
+	public function renderIssueReturn(): View|Factory
 	{
 		return view('panel.issue-return');
 	}

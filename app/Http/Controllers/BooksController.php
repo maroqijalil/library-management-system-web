@@ -15,13 +15,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
-class BooksController extends Controller
+class BooksController extends BaseController
 {
 	public function __construct()
 	{
 
-		$this->filter_params = array('category_id');
+		$this->filterParams = array('category_id');
 	}
 
 	/**
@@ -29,7 +32,7 @@ class BooksController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(): Response
 	{
 
 		$bookList = Books::select('book_id', 'title', 'author', 'description', 'book_categories.category')
@@ -60,12 +63,7 @@ class BooksController extends Controller
 		return $bookList;
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store(Request $request)
+	public function store(Request $request): string
 	{
 		$books = $request->all();
 
@@ -109,7 +107,7 @@ class BooksController extends Controller
 	}
 
 
-	public function bookCategoryStore(Request $request)
+	public function bookCategoryStore(Request $request): string
 	{
 		$bookcategory = BookCategories::create($request->all());
 
@@ -120,14 +118,7 @@ class BooksController extends Controller
 		return "Book Category Added successfully to Database";
 	}
 
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($string)
+	public function show(string $string): Response
 	{
 		$bookList = Books::select('book_id', 'title', 'author', 'description', 'book_categories.category')
 			->join('book_categories', 'book_categories.id', '=', 'books.category_id')
@@ -159,7 +150,7 @@ class BooksController extends Controller
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit(int $id): string|Response
 	{
 		$issue = Issue::find($id);
 		if ($issue == NULL) {
@@ -187,6 +178,7 @@ class BooksController extends Controller
 			->take(1)
 			->get();
 
+		$studentId = 0;
 		foreach ($bookIssueLog as $log) {
 			$studentId = $log->student_id;
 		}
@@ -212,32 +204,31 @@ class BooksController extends Controller
 			->category;
 		$issue->student = $studentData;
 
-
 		return $issue;
 	}
 
-	public function renderAddBookCategory()
+	public function renderAddBookCategory(): View|Factory
 	{
 		return view('panel.addbookcategory');
 	}
 
-	public function renderAddBooks()
+	public function renderAddBooks(): View|Factory
 	{
 		$dbControl = new HomeController();
 
 		return view('panel.addbook')
-			->with('categories_list', $dbControl->categories_list);
+			->with('categories_list', $dbControl->categoriesList);
 	}
 
-	public function renderAllBooks()
+	public function renderAllBooks(): View|Factory
 	{
 		$dbControl = new HomeController();
 
 		return view('panel.allbook')
-			->with('categories_list', $dbControl->categories_list);
+			->with('categories_list', $dbControl->categoriesList);
 	}
 
-	public function bookByCategory($catId)
+	public function bookByCategory(int $catId): Response
 	{
 		$bookList = Books::select('book_id', 'title', 'author', 'description', 'book_categories.category')
 			->join('book_categories', 'book_categories.id', '=', 'books.category_id')
@@ -266,11 +257,11 @@ class BooksController extends Controller
 		return $bookList;
 	}
 
-	public function searchBook()
+	public function searchBook(): View|Factory
 	{
 		$dbControl = new HomeController();
 
 		return view('public.book-search')
-			->with('categories_list', $dbControl->categories_list);
+			->with('categories_list', $dbControl->categoriesList);
 	}
 }

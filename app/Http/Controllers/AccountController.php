@@ -8,12 +8,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class AccountController extends Controller
 {
 	### Sign In
 	/* After submitting the sign-in form */
-	public function postSignIn(Request $request)
+	public function postSignIn(Request $request): RedirectResponse
 	{
 		$validator = $request->validate([
 			'username' 	=> 'required',
@@ -43,7 +46,7 @@ class AccountController extends Controller
 	}
 
 	/* Submitting the Create User form (POST) */
-	public function postCreate(Request $request)
+	public function postCreate(Request $request): RedirectResponse
 	{
 		// dd($request->all());
 		$validator = $request->validate([
@@ -71,21 +74,24 @@ class AccountController extends Controller
 			return Redirect::route('account-sign-in')
 				->with('global', 'Your account has been created. We have sent you an email to activate your account');
 		}
+
+		return Redirect::route('account-sign-in')
+			->with('global', 'Failed, please try again!');
 	}
 
-	public function getSignIn()
+	public function getSignIn(): View|Factory
 	{
 		return view('account.signin');
 	}
 
 	/* Viewing the form (GET) */
-	public function getCreate()
+	public function getCreate(): View|Factory
 	{
 		return view('account.create');
 	}
 
 	### Sign Out
-	public function getSignOut()
+	public function getSignOut(): RedirectResponse
 	{
 		Auth::logout();
 		return Redirect::route('account-sign-in');

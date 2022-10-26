@@ -1,10 +1,16 @@
 <?php
 
+namespace App\Http\Controllers;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Request as Input;
+
 class BaseController extends Controller
 {
-  protected  $filterParams = array();
+  protected array $filterParams = array();
 
-  protected  $sortParams = array();
+  protected array $sortParams = array();
 
   /**
    * Setup the layout used by the controller.
@@ -19,9 +25,9 @@ class BaseController extends Controller
   }
 
   /* 
-         * Apply pagination based on Get parameters to index queries
-         */
-  protected function paginateQuery(&$query)
+  * Apply pagination based on Get parameters to index queries
+  */
+  protected function paginateQuery(Model &$query): void
   {
     $start = 0;
     $limit = 30;
@@ -35,11 +41,11 @@ class BaseController extends Controller
   }
 
   /* 
-         * Apply filters based on Get parameters to index queries
-         */
-  protected function filterQuery(&$query)
+  * Apply filters based on Get parameters to index queries
+  */
+  protected function filterQuery(Model &$query): void
   {
-    foreach ($this->filter_params as $filter) {
+    foreach ($this->filterParams as $filter) {
       if (Input::has($filter)) {
         $val = Input::get($filter);
         $query->where($filter, '=', $val);
@@ -47,7 +53,7 @@ class BaseController extends Controller
     }
   }
 
-  protected function sortQuery(&$query)
+  protected function sortQuery(Model &$query): void
   {
     if (Input::has('sorts')) {
       $sorts = explode(",", Input::get('sorts'));
@@ -55,7 +61,7 @@ class BaseController extends Controller
       foreach ($sorts as $sort) {
         $param = explode(':', $sort);
 
-        if (in_array($param[0], $this->sort_params)) {
+        if (in_array($param[0], $this->sortParams)) {
           if (isset($param[1]) && strtolower($param[1]) == 'desc') {
             $query->orderBy($param[0], 'desc');
             continue;

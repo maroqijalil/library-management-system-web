@@ -11,17 +11,22 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\StudentCategories;
 use App\Http\Controllers\HomeController;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
-class StudentController extends Controller
+class StudentController extends BaseController
 {
 	public function __construct()
 	{
 
-		$this->filter_params = array('branch', 'year', 'category');
+		$this->filterParams = array('branch', 'year', 'category');
 	}
 
-	public function index()
+	public function index(): Response
 	{
 		$conditions = array(
 			'approved'	=> 0,
@@ -40,7 +45,7 @@ class StudentController extends Controller
 		return $students;
 	}
 
-	public function studentByAttribute(Request $request)
+	public function studentByAttribute(Request $request): string
 	{
 		// dd($request->branch );
 		$conditions = array(
@@ -83,7 +88,7 @@ class StudentController extends Controller
 	}
 
 
-	public function create()
+	public function create(): Response
 	{
 		$conditions = array(
 			'approved'	=> 1,
@@ -102,14 +107,7 @@ class StudentController extends Controller
 		return $students;
 	}
 
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
+	public function show(int $id): Response
 	{
 		$student = Student::find($id);
 		if ($student == NULL) {
@@ -163,14 +161,7 @@ class StudentController extends Controller
 		return $student;
 	}
 
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update(Request $request, $id)
+	public function update(Request $request, int $id): string
 	{
 		$flag = (bool)$request->get('flag');
 
@@ -197,7 +188,7 @@ class StudentController extends Controller
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Request $request, $id)
+	public function destroy(Request $request, int $id): RedirectResponse|Redirector|string
 	{
 		// dd($request->all());
 		if ($request->category) {
@@ -219,36 +210,37 @@ class StudentController extends Controller
 
 			return redirect(route('settings'));
 		}
+
+		return "Failed, try again!";
 	}
 
 
-	public function renderStudents()
+	public function renderStudents(): View|Factory
 	{
 		$dbControl = new HomeController;
 		return view('panel.students')
-			->with('branch_list', $dbControl->branch_list)
-			->with('student_categories_list', $dbControl->student_categories_list);
+			->with('branch_list', $dbControl->branchList)
+			->with('student_categories_list', $dbControl->studentCatList);
 	}
 
-	public function renderApprovalStudents()
+	public function renderApprovalStudents(): View|Factory
 	{
 		$dbControl = new HomeController;
 		return view('panel.approval')
-			->with('branch_list', $dbControl->branch_list)
-			->with('student_categories_list', $dbControl->student_categories_list);
+			->with('branch_list', $dbControl->branchList)
+			->with('student_categories_list', $dbControl->studentCatList);
 	}
 
-	public function getRegistration()
+	public function getRegistration(): View|Factory
 	{
 		$dbControl = new HomeController;
 		return view('public.registration')
-			->with('branch_list', $dbControl->branch_list)
-			->with('student_categories_list', $dbControl->student_categories_list);
+			->with('branch_list', $dbControl->branchList)
+			->with('student_categories_list', $dbControl->studentCatList);
 	}
 
-	public function postRegistration(Request $request)
+	public function postRegistration(Request $request): RedirectResponse
 	{
-
 		$validator = $request->validate([
 
 			'first'			=> 'required|alpha',
@@ -281,9 +273,12 @@ class StudentController extends Controller
 			return Redirect::route('student-registration')
 				->with('global', 'Your request has been raised, you will be soon approved!');
 		}
+
+		return Redirect::route('student-registration')
+			->with('global', 'Failed, please try again!');
 	}
 
-	public function setting()
+	public function setting(): View|Factory
 	{
 		$branches = Branch::all();
 		$studentCategory = StudentCategories::all();
@@ -293,7 +288,7 @@ class StudentController extends Controller
 			->with('student_category', $studentCategory);
 	}
 
-	public function storeSetting(Request $request)
+	public function storeSetting(Request $request): string
 	{
 		// dd($request->all());
 		if ($request->category) {
@@ -315,5 +310,7 @@ class StudentController extends Controller
 
 			return "School Branch Save Succesfully!.";
 		}
+
+		return "Failed, please try again!";
 	}
 }
