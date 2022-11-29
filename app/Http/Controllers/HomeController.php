@@ -16,9 +16,9 @@ use Illuminate\View\View;
 class HomeController extends Controller
 {
 
-    public array $categoriesList = array();
-    public array $branchList = array();
-    public array $studentCatList = array();
+    public $categoriesList = array();
+    public $branchList = array();
+    public $studentCatList = array();
 
     public function __construct()
     {
@@ -27,11 +27,11 @@ class HomeController extends Controller
         $this->studentCatList = StudentCategories::select()->orderBy('cat_id')->get();
     }
 
-    public function home(): View|Factory
+    public function home(): View
     {
         return view('panel.index')
-            ->with('categories_list', $this->categoriesList)
-            ->with('branch_list', $this->branchList)
-            ->with('student_categories_list', $this->studentCatList);
+            ->with('categoriesList', $this->categoriesList)
+            ->with('branchList', $this->branchList)
+            ->with('studentCatList', $this->studentCatList);
     }
 }

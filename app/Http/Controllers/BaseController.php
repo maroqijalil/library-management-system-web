@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Request as Input;
 
 class BaseController extends Controller
 {
-  protected array $filterParams = array();
+  protected $filterParams = array();
 
-  protected array $sortParams = array();
+  protected $sortParams = array();
 
   /**
    * Setup the layout used by the controller.

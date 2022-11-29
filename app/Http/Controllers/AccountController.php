@@ -79,13 +79,13 @@ class AccountController extends Controller
 			->with('global', 'Failed, please try again!');
 	}
 
-	public function getSignIn(): View|Factory
+	public function getSignIn(): View
 	{
 		return view('account.signin');
 	}
 
 	/* Viewing the form (GET) */
-	public function getCreate(): View|Factory
+	public function getCreate(): View
 	{
 		return view('account.create');
 	}

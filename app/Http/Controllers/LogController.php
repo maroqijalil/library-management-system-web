@@ -163,12 +163,12 @@ class LogController extends Controller
 		return 'Successfully returned';
 	}
 
-	public function renderLogs(): View|Factory
+	public function renderLogs(): View
 	{
 		return view('panel.logs');
 	}
 
-	public function renderIssueReturn(): View|Factory
+	public function renderIssueReturn(): View
 	{
 		return view('panel.issue-return');
 	}

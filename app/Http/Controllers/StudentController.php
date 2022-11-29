@@ -188,7 +188,7 @@ class StudentController extends BaseController
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy(Request $request, int $id): RedirectResponse|Redirector|string
+	public function destroy(Request $request, int $id)
 	{
 		// dd($request->all());
 		if ($request->category) {
@@ -215,28 +215,28 @@ class StudentController extends BaseController
 	}
 
 
-	public function renderStudents(): View|Factory
+	public function renderStudents(): View
 	{
 		$dbControl = new HomeController;
 		return view('panel.students')
-			->with('branch_list', $dbControl->branchList)
-			->with('student_categories_list', $dbControl->studentCatList);
+			->with('branchList', $dbControl->branchList)
+			->with('studentCatList', $dbControl->studentCatList);
 	}
 
-	public function renderApprovalStudents(): View|Factory
+	public function renderApprovalStudents(): View
 	{
 		$dbControl = new HomeController;
 		return view('panel.approval')
-			->with('branch_list', $dbControl->branchList)
-			->with('student_categories_list', $dbControl->studentCatList);
+			->with('branchList', $dbControl->branchList)
+			->with('studentCatList', $dbControl->studentCatList);
 	}
 
-	public function getRegistration(): View|Factory
+	public function getRegistration(): View
 	{
 		$dbControl = new HomeController;
 		return view('public.registration')
-			->with('branch_list', $dbControl->branchList)
-			->with('student_categories_list', $dbControl->studentCatList);
+			->with('branchList', $dbControl->branchList)
+			->with('studentCatList', $dbControl->studentCatList);
 	}
 
 	public function postRegistration(Request $request): RedirectResponse
@@ -278,14 +278,14 @@ class StudentController extends BaseController
 			->with('global', 'Failed, please try again!');
 	}
 
-	public function setting(): View|Factory
+	public function setting(): View
 	{
 		$branches = Branch::all();
 		$studentCategory = StudentCategories::all();
 
 		return view('panel.addsettings')
 			->with('branches', $branches)
-			->with('student_category', $studentCategory);
+			->with('studentCategory', $studentCategory);
 	}
 
 	public function storeSetting(Request $request): string

@@ -150,7 +150,7 @@ class BooksController extends BaseController
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit(int $id): string|Response
+	public function edit(int $id)
 	{
 		$issue = Issue::find($id);
 		if ($issue == NULL) {
@@ -207,25 +207,25 @@ class BooksController extends BaseController
 		return $issue;
 	}
 
-	public function renderAddBookCategory(): View|Factory
+	public function renderAddBookCategory(): View
 	{
 		return view('panel.addbookcategory');
 	}
 
-	public function renderAddBooks(): View|Factory
+	public function renderAddBooks(): View
 	{
 		$dbControl = new HomeController();
 
 		return view('panel.addbook')
-			->with('categories_list', $dbControl->categoriesList);
+			->with('categoriesList', $dbControl->categoriesList);
 	}
 
-	public function renderAllBooks(): View|Factory
+	public function renderAllBooks(): View
 	{
 		$dbControl = new HomeController();
 
 		return view('panel.allbook')
-			->with('categories_list', $dbControl->categoriesList);
+			->with('categoriesList', $dbControl->categoriesList);
 	}
 
 	public function bookByCategory(int $catId): Response
@@ -257,11 +257,11 @@ class BooksController extends BaseController
 		return $bookList;
 	}
 
-	public function searchBook(): View|Factory
+	public function searchBook(): View
 	{
 		$dbControl = new HomeController();
 
 		return view('public.book-search')
-			->with('categories_list', $dbControl->categoriesList);
+			->with('categoriesList', $dbControl->categoriesList);
 	}
 }
